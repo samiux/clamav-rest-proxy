@@ -7,12 +7,16 @@ use axum::{
 };
 use axum_macros::debug_handler;
 
+
 use serde::Serialize;
 use std::{
     convert::Infallible,
     net::{SocketAddr, ToSocketAddrs},
 };
-use tracing::{log::error, log::warn};
+use tracing::{
+    log::warn,
+    log::{error},
+};
 
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -28,6 +32,7 @@ struct ServerConfig {
 struct ScanInfo {
     is_infected: bool,
     infected_files: Vec<String>,
+    detected_mime_type: Option<String>,
 }
 
 // Handler that accepts a multipart form upload and streams each field to a file.
@@ -67,9 +72,13 @@ async fn accept_data(
         warn!("DETECTION: Found {}", data.detected_infections.join(","));
     }
 
+    let detection = infer::get(&body);
+    let detection_string = detection.map(|detection| detection.to_string());
+
     Ok(Json(ScanInfo {
         is_infected: data.is_infected,
         infected_files: data.detected_infections,
+        detected_mime_type: detection_string,
     }))
 }
 

@@ -4,5 +4,14 @@ services:
   clamav:
     image: clamav/clamav:stable
     ports:
-        - 3310:3310
-        - 7537:7357
+      - 3310:3310
+      - 7537:7357
+
+  clamav-rest-proxy:
+    image: nnari/clamav-rest-proxy:latest
+    build: .
+    environment:
+      - PORT=7676
+      - CLAMAV_UPSTREAM=clamav:3310
+    ports:
+      - 7676:7676
