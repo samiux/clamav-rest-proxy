@@ -15,7 +15,7 @@ use std::{
 };
 use tracing::{
     log::warn,
-    log::{error},
+    log::{error}, instrument,
 };
 
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
