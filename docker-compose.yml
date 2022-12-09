@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  clamav:
+    image: clamav/clamav:stable
+    ports:
+        - 3310:3310
+        - 7537:7357
